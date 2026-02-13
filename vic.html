@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Dearest victorious</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-pink: #ff6bad;
+            --soft-pink: #fff0f5;
+            --deep-red: #d02090;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background: radial-gradient(circle, #fff0f5, #ffb6c1);
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Falling Flowers */
+        .flower {
+            position: absolute; top: -50px; color: #ff69b4;
+            font-size: 24px; user-select: none; z-index: 1000;
+            pointer-events: none; animation: fall linear infinite;
+        }
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        /* Glitters */
+        .glitter {
+            position: fixed; width: 3px; height: 3px; background: white;
+            border-radius: 50%; opacity: 0; animation: sparkle 3s infinite;
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        /* Container & Pages */
+        .page {
+            position: absolute; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; text-align: center; opacity: 0;
+            transition: opacity 1.5s ease-in-out; padding: 20px; box-sizing: border-box;
+            z-index: 1; pointer-events: none;
+        }
+        .active { opacity: 1; z-index: 10; pointer-events: all; }
+
+        h1 { font-family: 'Great Vibes', cursive; font-size: 4.5rem; color: var(--deep-red); margin: 10px; text-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+        p { font-size: 1.4rem; max-width: 700px; color: #4a4a4a; line-height: 1.6; font-weight: bold; }
+        
+        .photo-frame {
+            width: 320px; height: 240px; background: white;
+            border: 10px solid white; border-bottom: 40px solid white;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.2); transform: rotate(-3deg);
+            margin: 20px; border-radius: 2px; object-fit: cover;
+        }
+
+        .btn {
+            padding: 15px 35px; font-size: 1.2rem; border: none; border-radius: 30px;
+            cursor: pointer; font-family: 'Dancing Script', cursive;
+            transition: 0.3s; margin: 10px;
+        }
+        .btn-start { background: var(--primary-pink); color: white; box-shadow: 0 5px 15px rgba(255,107,173,0.4); }
+        .btn-yes { background: #2ecc71; color: white; }
+        .btn-no { background: #e74c3c; color: white; }
+
+        /* Hidden Music Container */
+        #music-container { position: absolute; visibility: hidden; }
+    </style>
+</head>
+<body>
+
+    <div id="music-container"></div>
+
+    <div class="page active" id="p1">
+        <h1>To My Dearest victorious</h1>
+        <p>I wanted to show you how much you mean to me...</p>
+        <button class="btn btn-start" onclick="startJourney()">Get Started</button>
+    </div>
+
+    <div class="page" id="p2">
+        <h1>Since the Day We Met</h1>
+        <img src="https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?auto=format&fit=crop&w=500" class="photo-frame">
+        <p>From that very first moment, my world changed. Our relationship has been a beautiful story of growth, laughter, and a love that gets deeper every day.</p>
+    </div>
+
+    <div class="page" id="p3">
+        <h1>Our Romantic Moments</h1>
+        <img src="https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&w=500" class="photo-frame" style="transform: rotate(3deg);">
+        <p>Every date, every kiss, and every "I love you" is a memory I hold close. Thank you for making every second feel like a movie.</p>
+    </div>
+
+    <div class="page" id="p4">
+        <h1>A Vow to You</h1>
+        <p>I promise to stand by you, to support your dreams, and to never leave your side. We are a team, now and forever.</p>
+        <h1>Our Future</h1>
+        <p>I see a lifetime of adventures, a home full of joy, and us growing old together hand in hand.</p>
+    </div>
+
+    <div class="page" id="p5">
+        <h1>victorious...</h1>
+        <p>You are my heart and soul. There's only one thing I need to know...</p>
+        <h1 style="font-size: 5rem;">Will you be my Valentine?</h1>
+        <div>
+            <button class="btn btn-yes" onclick="answer('yes')">YES!</button>
+            <button class="btn btn-no" onclick="answer('no')">No...</button>
+        </div>
+    </div>
+
+    <div class="page" id="success">
+        <h1>I Knew You'd Say Yes!</h1>
+        <p>❤️ Sending you a million kisses! ❤️</p>
+        <p>Our journey is just beginning. I love you, victorious!</p>
+        <button class="btn btn-start" onclick="location.reload()">Get Started Again</button>
+    </div>
+
+    <script>
+        let interval;
+
+        function startJourney() {
+            // Play Song
+            const player = document.getElementById('music-container');
+            player.innerHTML = `<iframe width="0" height="0" src="https://www.youtube.com/embed/WcrQu5mjpME?autoplay=1" frameborder="0" allow="autoplay"></iframe>`;
+            
+            // Start Auto Flow
+            flow(1);
+        }
+
+        function flow(pageNumber) {
+            if (pageNumber >= 5) return;
+
+            setTimeout(() => {
+                document.getElementById('p' + pageNumber).classList.remove('active');
+                document.getElementById('p' + (pageNumber + 1)).classList.add('active');
+                flow(pageNumber + 1);
+            }, 7000); // Wait 7 seconds per page
+        }
+
+        function answer(choice) {
+            if (choice === 'yes') {
+                document.getElementById('p5').classList.remove('active');
+                document.getElementById('success').classList.add('active');
+            } else {
+                alert("You are kidding me, victorious! Try again! 😉");
+            }
+        }
+
+        // Falling Flowers Effect
+        function createFlower() {
+            const flowers = ['🌸', '🌺', '🌹', '🌷', '✨'];
+            const flower = document.createElement('div');
+            flower.classList.add('flower');
+            flower.innerHTML = flowers[Math.floor(Math.random() * flowers.length)];
+            flower.style.left = Math.random() * 100 + 'vw';
+            flower.style.animationDuration = Math.random() * 3 + 4 + 's';
+            flower.style.opacity = Math.random();
+            document.body.appendChild(flower);
+            setTimeout(() => flower.remove(), 7000);
+        }
+        setInterval(createFlower, 400);
+
+        // Glitter Stars Effect
+        for(let i=0; i<60; i++) {
+            const glitter = document.createElement('div');
+            glitter.classList.add('glitter');
+            glitter.style.left = Math.random() * 100 + 'vw';
+            glitter.style.top = Math.random() * 100 + 'vh';
+            glitter.style.animationDelay = Math.random() * 5 + 's';
+            document.body.appendChild(glitter);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Love Hassan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-red: #d00000;
+            --gold: #ffd700;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+            font-family: 'Quicksand', sans-serif;
+            /* Dynamic Colourful Background (No Slides) */
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1, #84fab0, #ffecd2);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Full Screen Text Layer */
+        .content-section {
+            position: absolute;
+            width: 100%;
+            padding: 20px;
+            display: none;
+            z-index: 10;
+        }
+
+        .active { display: block; animation: fadeIn 1.5s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 { font-family: 'Pacifico', cursive; font-size: 3.5rem; color: var(--primary-red); text-shadow: 2px 2px rgba(255,255,255,0.6); margin-bottom: 20px; }
+        p { font-size: 1.6rem; color: #333; font-weight: 500; max-width: 800px; margin: 0 auto; line-height: 1.4; }
+
+        /* Interaction Buttons */
+        .main-btn {
+            padding: 15px 45px;
+            font-size: 1.6rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            background: var(--primary-red);
+            color: white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            margin-top: 30px;
+            transition: 0.3s;
+        }
+
+        #noBtn { background: #555; position: absolute; }
+
+        /* Reasons why I love him (appears on Yes) */
+        .reason-paragraph {
+            background: rgba(255, 255, 255, 0.4);
+            margin: 10px auto;
+            padding: 10px 20px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary-red);
+            font-weight: bold;
+            max-width: 600px;
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        @keyframes slideIn { from { transform: translateX(-50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* Flowing Hearts and Flowers */
+        .floating {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+            animation: floatUp 6s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="decoration-layer"></div>
+    <div id="music-container" style="display:none;"></div>
+
+    <div class="content-section active" id="page1">
+        <h1>To My Dear Hassan...</h1>
+        <p>I wanted to acknowledge how much of a blessing you are in my life. Every day with you is special.</p>
+        <button class="main-btn" onclick="startJourney()">Get Started 🎵</button>
+    </div>
+
+    <div class="content-section" id="page2">
+        <h1>I have a big surprise...</h1>
+        <p>Prepare yourself, Hassan! I've been planning something special just for you.</p>
+    </div>
+
+    <div class="content-section" id="page3">
+        <h1>Will you be my Valentine?</h1>
+        <div style="height: 120px; position: relative; margin-top: 20px;">
+            <button class="main-btn" id="yesBtn" onclick="handleYes()">YES!</button>
+            <button class="main-btn" id="noBtn" onmouseover="moveNo()">No</button>
+        </div>
+        <div id="love-reasons" style="display:none; margin-top: 20px;">
+            <p style="margin-bottom: 15px;"><strong>I love you Honey because...</strong></p>
+            <div class="reason-paragraph">1. You are my safe haven and my best friend.</div>
+            <div class="reason-paragraph">2. Your laugh is my favorite song in the world.</div>
+            <div class="reason-paragraph">3. You support my dreams even when I doubt myself.</div>
+            <div class="reason-paragraph">4. You are the most handsome and kind soul I know.</div>
+            <div class="reason-paragraph">5. You make every ordinary moment feel magical, Hassan.</div>
+        </div>
+    </div>
+
+    <div class="content-section" id="page4">
+        <h1>Our Romantic Moments</h1>
+        <p>From our first date to our late-night talks, every memory we've shared is a treasure I hold close.</p>
+    </div>
+
+    <div class="content-section" id="page5">
+        <h1>Our Future Together</h1>
+        <p>I see us traveling the world, building a home, and growing old together, hand in hand, forever.</p>
+    </div>
+
+    <div class="content-section" id="page6">
+        <h1>A Surprise for You! 🎁</h1>
+        <p>Hassan, check your messages/mailbox right now! I have a special gift waiting for you.</p>
+        <h1 style="margin-top: 40px;">I Love You Always!</h1>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let flowTimer;
+
+        function startJourney() {
+            // Play the requested song (Alikiba - Topic)
+            document.getElementById('music-container').innerHTML = 
+                `<iframe src="https://www.youtube.com/embed/jJh8IxDtthE?autoplay=1" allow="autoplay"></iframe>`;
+            
+            triggerNextPage();
+        }
+
+        function triggerNextPage() {
+            if (currentPage < 6) {
+                document.getElementById(`page${currentPage}`).classList.remove('active');
+                currentPage++;
+                document.getElementById(`page${currentPage}`).classList.add('active');
+
+                // If it's the proposal page (3), stop auto-flow so he can click Yes
+                if (currentPage !== 3) {
+                    flowTimer = setTimeout(triggerNextPage, 6000); 
+                }
+            }
+        }
+
+        function moveNo() {
+            const noBtn = document.getElementById('noBtn');
+            const x = Math.random() * (window.innerWidth - 150);
+            const y = Math.random() * (window.innerHeight - 100);
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+            noBtn.innerText = "You kidding me? 😂";
+        }
+
+        function handleYes() {
+            document.getElementById('noBtn').style.display = 'none';
+            document.getElementById('love-reasons').style.display = 'block';
+            
+            // 1. Glitter & Confetti Burst
+            var end = Date.now() + (5 * 1000);
+            var colors = ['#ffd700', '#ff0000', '#ffffff'];
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colors
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+
+            // Gold Glitter rain
+            setInterval(() => {
+                confetti({
+                    particleCount: 10,
+                    gravity: 0.5,
+                    ticks: 200,
+                    colors: ['#ffd700'],
+                    origin: { y: 0 }
+                });
+            }, 800);
+
+            // Wait 12 seconds for him to read reasons, then continue flow
+            setTimeout(triggerNextPage, 12000);
+        }
+
+        // Floating Hearts & Flowers Generator
+        function createDecoration() {
+            const items = ['❤️', '🌸', '💖', '🌹', '✨', '🌼'];
+            const decor = document.createElement('div');
+            decor.className = 'floating';
+            decor.innerText = items[Math.floor(Math.random() * items.length)];
+            decor.style.left = Math.random() * 100 + 'vw';
+            decor.style.fontSize = (Math.random() * 25 + 15) + 'px';
+            decor.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            document.getElementById('decoration-layer').appendChild(decor);
+            
+            setTimeout(() => { decor.remove(); }, 6000);
+        }
+
+        setInterval(createDecoration, 300);
+    </script>
+</body>
+</html>

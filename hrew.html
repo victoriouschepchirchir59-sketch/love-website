@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Love Hassan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --valentine-red: #d00000;
+            --gold: #ffd700;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+            font-family: 'Quicksand', sans-serif;
+            background: radial-gradient(circle, #ff4d6d 0%, #d00000 70%, #800000 100%);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        /* Full Screen Text Content */
+        .content-layer {
+            position: absolute;
+            width: 90%;
+            max-width: 800px;
+            display: none;
+            z-index: 10;
+        }
+
+        .active { display: block; animation: fadeIn 1.5s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 { font-family: 'Pacifico', cursive; font-size: 3.5rem; text-shadow: 3px 3px 10px rgba(0,0,0,0.5); margin-bottom: 20px; }
+        p { font-size: 1.6rem; font-weight: 500; line-height: 1.4; }
+
+        /* Buttons */
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            background: white;
+            color: var(--valentine-red);
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            margin-top: 30px;
+        }
+
+        #noBtn { background: #555; color: white; position: absolute; }
+
+        /* Gifts Display */
+        .gift-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .gift-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 15px;
+            border: 1px solid white;
+        }
+
+        /* Floating Elements */
+        .floating {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+            animation: floatUp 6s linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        }
+
+        iframe { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="decor-layer"></div>
+    <div id="music-layer"></div>
+
+    <div class="content-layer active" id="p1">
+        <h1>To My Love, Hassan</h1>
+        <p>You are my everything, and I want to acknowledge the light you bring into my life every day.</p>
+        <button class="btn" onclick="startFlow()">Get Started 🎵</button>
+    </div>
+
+    <div class="content-layer" id="p2">
+        <h1>A Big Surprise...</h1>
+        <p>Hassan, prepare yourself! I have a question that comes straight from my heart.</p>
+    </div>
+
+    <div class="content-layer" id="p3">
+        <h1>Will you be my Valentine?</h1>
+        <div style="height: 100px; position: relative; margin-top: 20px;">
+            <button class="btn" id="yesBtn" onclick="handleYes()">YES!</button>
+            <button class="btn" id="noBtn" onmouseover="moveNo()">No</button>
+        </div>
+        <div id="love-reasons" style="display:none; margin-top: 20px;">
+            <p><strong>I love you Honey because...</strong></p>
+            <div class="gift-item" style="margin: 5px;">1. You make my world feel like home.</div>
+            <div class="gift-item" style="margin: 5px;">2. Your kindness is a gift to everyone.</div>
+            <div class="gift-item" style="margin: 5px;">3. You are my greatest support system.</div>
+            <div class="gift-item" style="margin: 5px;">4. Your smile is my favorite sight.</div>
+            <div class="gift-item" style="margin: 5px;">5. You are uniquely you, Hassan.</div>
+        </div>
+    </div>
+
+    <div class="content-layer" id="p4">
+        <h1>Our Moments</h1>
+        <p>Every laugh we've shared and every moment in your arms is a memory I will treasure forever.</p>
+    </div>
+
+    <div class="content-layer" id="p5">
+        <h1>Our Future</h1>
+        <p>I see a life of adventure, peace, and endless love with you by my side, hand in hand.</p>
+    </div>
+
+    <div class="content-layer" id="p6">
+        <h1>Surprise Gifts! 🎁</h1>
+        <p>I have a special gift box waiting for you containing:</p>
+        <div class="gift-container">
+            <div class="gift-item">🍾 Fine Champagne</div>
+            <div class="gift-item">🍫 Luxury Chocolates</div>
+            <div class="gift-item">🕯️ Scented Candle</div>
+            <div class="gift-item">✉️ A Heartfelt Love Letter</div>
+            <div class="gift-item" style="grid-column: span 2;">💎 A Special Heart Necklace</div>
+        </div>
+        <h1 style="margin-top: 20px; font-size: 2.5rem;">I Love You Always!</h1>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let flowInterval;
+
+        function startFlow() {
+            // Play requested song
+            document.getElementById('music-layer').innerHTML = 
+                `<iframe src="https://www.youtube.com/embed/jJh8IxDtthE?autoplay=1" allow="autoplay"></iframe>`;
+            autoNext();
+        }
+
+        function autoNext() {
+            if (currentPage < 6) {
+                document.getElementById(`p${currentPage}`).classList.remove('active');
+                currentPage++;
+                document.getElementById(`p${currentPage}`).classList.add('active');
+
+                // Stop at Proposal (Page 3)
+                if (currentPage !== 3) {
+                    flowInterval = setTimeout(autoNext, 7000); 
+                }
+            } else {
+                // AUTO-LOOP: Restart from Page 1 after Page 6 is finished
+                setTimeout(() => {
+                    document.getElementById('p6').classList.remove('active');
+                    document.getElementById('love-reasons').style.display = 'none';
+                    document.getElementById('noBtn').style.display = 'inline-block';
+                    currentPage = 1;
+                    document.getElementById('p1').classList.add('active');
+                    autoNext();
+                }, 10000); // Stays on Page 6 for 10 seconds before restarting
+            }
+        }
+
+        function moveNo() {
+            const btn = document.getElementById('noBtn');
+            btn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+            btn.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+            btn.innerText = "You kidding me? 😂";
+        }
+
+        function handleYes() {
+            document.getElementById('noBtn').style.display = 'none';
+            document.getElementById('love-reasons').style.display = 'block';
+            
+            // Gold Glitters & Confetti
+            const end = Date.now() + (6 * 1000);
+            (function frame() {
+                confetti({ particleCount: 10, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ffd700', '#ffffff'] });
+                confetti({ particleCount: 10, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ffd700', '#ffffff'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+
+            // Wait to read reasons, then continue
+            setTimeout(autoNext, 12000);
+        }
+
+        // Floating Hearts & Flowers
+        function createDecor() {
+            const sym = ['❤️', '🌸', '🌹', '💖', '✨'];
+            const d = document.createElement('div');
+            d.className = 'floating';
+            d.innerText = sym[Math.floor(Math.random() * sym.length)];
+            d.style.left = Math.random() * 100 + 'vw';
+            d.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            d.style.animationDuration = (Math.random() * 2 + 4) + 's';
+            document.getElementById('decor-layer').appendChild(d);
+            setTimeout(() => d.remove(), 6000);
+        }
+        setInterval(createDecor, 300);
+    </script>
+</body>
+</html>
